@@ -4,7 +4,7 @@ This repo showcases Payload 3.0, its support for Postgres (as well as MongoDB), 
 
 ### Quick Start
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/shaik-zeeshan/payloadgscm.git&env=PAYLOAD_SECRET,TMDB_API_KEY&build-command=pnpm%20run%20ci&stores=%5B%7B%22type%22%3A%22postgres%22%7D%2C%7B%22type%22%3A%22blob%22%7D%5D)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/shaik-zeeshan/payloadgscm.git&env=PAYLOAD_SECRET&build-command=pnpm%20run%20ci&stores=%5B%7B%22type%22%3A%22postgres%22%7D%2C%7B%22type%22%3A%22blob%22%7D%5D)
 
 ### Local Development
 

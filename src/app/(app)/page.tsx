@@ -14,6 +14,10 @@ export default async function Page() {
 		limit: 1,
 	});
 
+	if (!pages.docs.length) {
+		return notFound();
+	}
+
 	const page = await payload.update({
 		collection: "pages",
 		id: pages.docs[0].id,

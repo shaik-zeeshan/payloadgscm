@@ -176,6 +176,20 @@ export interface Page {
             blockName?: string | null;
             blockType: 'benefit';
           }
+        | {
+            title: string;
+            description: string;
+            images?:
+              | {
+                  image: number | Media;
+                  caption?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'gallery';
+          }
       )[]
     | null;
   slug?: string | null;

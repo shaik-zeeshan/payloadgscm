@@ -1,5 +1,6 @@
 import About from "@/cms/blocks/About";
 import Benefit from "@/cms/blocks/Benefit";
+import Gallery from "@/cms/blocks/Gallery";
 import Header from "@/cms/blocks/Header";
 import Hero from "@/cms/blocks/Hero";
 import { Service } from "@/cms/blocks/Service";
@@ -29,7 +30,7 @@ export const PagesCollection: CollectionConfig = {
 			name: "blocks",
 			label: "Blocks",
 			type: "blocks",
-			blocks: [Hero, About, Service, Header, Benefit],
+			blocks: [Hero, About, Service, Header, Benefit, Gallery],
 		},
 		{
 			name: "slug",

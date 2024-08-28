@@ -3,6 +3,7 @@ import Benefit from "@/cms/blocks/Benefit";
 import Gallery from "@/cms/blocks/Gallery";
 import Header from "@/cms/blocks/Header";
 import Hero from "@/cms/blocks/Hero";
+import Section from "@/cms/blocks/Section";
 import { Service } from "@/cms/blocks/Service";
 import { formatSlug } from "@/lib/utils";
 import { CollectionConfig } from "payload";
@@ -30,7 +31,7 @@ export const PagesCollection: CollectionConfig = {
 			name: "blocks",
 			label: "Blocks",
 			type: "blocks",
-			blocks: [Hero, About, Service, Header, Benefit, Gallery],
+			blocks: [Hero, About, Service, Header, Benefit, Gallery, Section],
 		},
 		{
 			name: "slug",

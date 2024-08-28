@@ -1,4 +1,4 @@
-# Payload 3.0 Movies Example
+# GSCM
 
 This repo showcases Payload 3.0, its support for Postgres (as well as MongoDB), its asset management system and admin dashboard, as well as simple deployment to Vercel.
 

@@ -18,7 +18,9 @@ export interface Config {
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
-  globals: {};
+  globals: {
+    header: Header;
+  };
   locale: null;
   user: User & {
     collection: 'users';
@@ -84,6 +86,7 @@ export interface Page {
   blocks?:
     | (
         | {
+            section_id?: string | null;
             textAlignment?: ('left' | 'center' | 'right') | null;
             verticalAlignment?: ('top' | 'center' | 'bottom') | null;
             title?: string | null;
@@ -98,6 +101,7 @@ export interface Page {
             blockType: 'hero';
           }
         | {
+            section_id?: string | null;
             title: string;
             description: string;
             content?: {
@@ -131,6 +135,7 @@ export interface Page {
             blockType: 'about';
           }
         | {
+            section_id?: string | null;
             title: string;
             description: string;
             services?:
@@ -146,23 +151,7 @@ export interface Page {
             blockType: 'service';
           }
         | {
-            logo?: string | null;
-            sections?:
-              | {
-                  title?: string | null;
-                  href?: string | null;
-                  id?: string | null;
-                }[]
-              | null;
-            cta?: {
-              text?: string | null;
-              href?: string | null;
-            };
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'header';
-          }
-        | {
+            section_id?: string | null;
             title: string;
             description: string;
             benefits?:
@@ -177,6 +166,7 @@ export interface Page {
             blockType: 'benefit';
           }
         | {
+            section_id?: string | null;
             title: string;
             description: string;
             images?:
@@ -191,6 +181,7 @@ export interface Page {
             blockType: 'gallery';
           }
         | {
+            section_id?: string | null;
             title: string;
             description: string;
             content?: {
@@ -264,6 +255,27 @@ export interface PayloadMigration {
   batch?: number | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "header".
+ */
+export interface Header {
+  id: number;
+  logo?: string | null;
+  sections?:
+    | {
+        title?: string | null;
+        href?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  cta?: {
+    text?: string | null;
+    href?: string | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

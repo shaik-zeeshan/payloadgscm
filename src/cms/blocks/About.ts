@@ -6,6 +6,11 @@ const About: Block = {
 	slug: "about",
 	fields: [
 		{
+			name: "section_id",
+			label: "Section ID",
+			type: "text",
+		},
+		{
 			name: "title",
 			label: "Title",
 			type: "text",

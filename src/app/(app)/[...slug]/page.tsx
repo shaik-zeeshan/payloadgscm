@@ -4,6 +4,7 @@ import { getPayloadHMR } from "@payloadcms/next/utilities";
 import configPromise from "@payload-config";
 import { notFound } from "next/navigation";
 import { Footer } from "@/components/footer";
+import { Header } from "@/components/header";
 
 export default async function Page({ params }: { params: { slug: string[] } }) {
 	const payload = await getPayloadHMR({ config: configPromise });
@@ -18,6 +19,10 @@ export default async function Page({ params }: { params: { slug: string[] } }) {
 		limit: 1,
 	});
 
+	if (!pages.docs.length) {
+		return notFound();
+	}
+
 	const page = await payload.update({
 		collection: "pages",
 		id: pages.docs[0].id,
@@ -30,21 +35,11 @@ export default async function Page({ params }: { params: { slug: string[] } }) {
 		notFound();
 	}
 
-	const notSection = ["hero"];
-
-	const sectionFiltered = page.blocks?.filter(
-		(block) => !notSection.includes(block.blockType),
-	);
-
-	const section = sectionFiltered?.map((block) => ({
-		name: block.blockType !== "header" ? block.blockName : "Home",
-		url: block.blockType !== "header" ? `/#${block.blockType}` : "/",
-	}));
-
 	return (
 		<div className="w-full h-full p-5">
+			<Header />
 			<RenderBlocks blocks={page.blocks} />
-			<Footer section={section} />
+			<Footer />
 		</div>
 	);
 }

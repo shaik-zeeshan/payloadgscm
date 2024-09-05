@@ -3,15 +3,12 @@ import Link from "next/link";
 import { getPayloadHMR } from "@payloadcms/next/utilities";
 import configPromise from "@payload-config";
 
-export const Footer = async ({
-	section = [],
-}: {
-	section?: {
-		name?: string | null;
-		url: string;
-	}[];
-}) => {
+export const Footer = async () => {
 	const payload = await getPayloadHMR({ config: configPromise });
+
+	const header = await payload.findGlobal<"header">({
+		slug: "header",
+	});
 
 	const socialLinks = await payload.find({
 		collection: "socal-links",
@@ -31,13 +28,13 @@ export const Footer = async ({
 				<div className="space-y-5">
 					<h1 className="text-xl font-semibold">Sections</h1>
 					<ul className="space-y-3">
-						{section.map((section, index) => (
+						{header.sections?.map((section, index) => (
 							<li key={index}>
 								<Link
-									href={section.url}
+									href={section.href || ""}
 									className="cursor-pointer text-primary-foreground/80 hover:text-primary-foreground transition-colors duration-300"
 								>
-									{section.name}
+									{section.title}
 								</Link>
 							</li>
 						))}

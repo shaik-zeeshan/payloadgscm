@@ -54,6 +54,7 @@ CREATE TABLE IF NOT EXISTS "pages_blocks_hero" (
 	"_parent_id" integer NOT NULL,
 	"_path" text NOT NULL,
 	"id" varchar PRIMARY KEY NOT NULL,
+	"section_id" varchar,
 	"textAlignment" "enum_pages_blocks_hero_text_alignment",
 	"verticalAlignment" "enum_pages_blocks_hero_vertical_alignment",
 	"title" varchar,
@@ -78,6 +79,7 @@ CREATE TABLE IF NOT EXISTS "pages_blocks_about" (
 	"_parent_id" integer NOT NULL,
 	"_path" text NOT NULL,
 	"id" varchar PRIMARY KEY NOT NULL,
+	"section_id" varchar,
 	"title" varchar NOT NULL,
 	"description" varchar NOT NULL,
 	"content" jsonb,
@@ -101,27 +103,9 @@ CREATE TABLE IF NOT EXISTS "pages_blocks_service" (
 	"_parent_id" integer NOT NULL,
 	"_path" text NOT NULL,
 	"id" varchar PRIMARY KEY NOT NULL,
+	"section_id" varchar,
 	"title" varchar NOT NULL,
 	"description" varchar NOT NULL,
-	"block_name" varchar
-);
-
-CREATE TABLE IF NOT EXISTS "pages_blocks_header_sections" (
-	"_order" integer NOT NULL,
-	"_parent_id" varchar NOT NULL,
-	"id" varchar PRIMARY KEY NOT NULL,
-	"title" varchar,
-	"href" varchar
-);
-
-CREATE TABLE IF NOT EXISTS "pages_blocks_header" (
-	"_order" integer NOT NULL,
-	"_parent_id" integer NOT NULL,
-	"_path" text NOT NULL,
-	"id" varchar PRIMARY KEY NOT NULL,
-	"logo" varchar,
-	"cta_text" varchar,
-	"cta_href" varchar,
 	"block_name" varchar
 );
 
@@ -138,8 +122,41 @@ CREATE TABLE IF NOT EXISTS "pages_blocks_benefit" (
 	"_parent_id" integer NOT NULL,
 	"_path" text NOT NULL,
 	"id" varchar PRIMARY KEY NOT NULL,
+	"section_id" varchar,
 	"title" varchar NOT NULL,
 	"description" varchar NOT NULL,
+	"block_name" varchar
+);
+
+CREATE TABLE IF NOT EXISTS "pages_blocks_gallery_images" (
+	"_order" integer NOT NULL,
+	"_parent_id" varchar NOT NULL,
+	"id" varchar PRIMARY KEY NOT NULL,
+	"image_id" integer NOT NULL,
+	"caption" varchar
+);
+
+CREATE TABLE IF NOT EXISTS "pages_blocks_gallery" (
+	"_order" integer NOT NULL,
+	"_parent_id" integer NOT NULL,
+	"_path" text NOT NULL,
+	"id" varchar PRIMARY KEY NOT NULL,
+	"section_id" varchar,
+	"title" varchar NOT NULL,
+	"description" varchar NOT NULL,
+	"block_name" varchar
+);
+
+CREATE TABLE IF NOT EXISTS "pages_blocks_section" (
+	"_order" integer NOT NULL,
+	"_parent_id" integer NOT NULL,
+	"_path" text NOT NULL,
+	"id" varchar PRIMARY KEY NOT NULL,
+	"section_id" varchar,
+	"title" varchar NOT NULL,
+	"description" varchar NOT NULL,
+	"content" jsonb,
+	"content_h_t_m_l" varchar,
 	"block_name" varchar
 );
 
@@ -185,6 +202,23 @@ CREATE TABLE IF NOT EXISTS "payload_migrations" (
 	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS "header_sections" (
+	"_order" integer NOT NULL,
+	"_parent_id" integer NOT NULL,
+	"id" varchar PRIMARY KEY NOT NULL,
+	"title" varchar,
+	"href" varchar
+);
+
+CREATE TABLE IF NOT EXISTS "header" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"logo" varchar,
+	"cta_text" varchar,
+	"cta_href" varchar,
+	"updated_at" timestamp(3) with time zone,
+	"created_at" timestamp(3) with time zone
+);
+
 CREATE INDEX IF NOT EXISTS "users_created_at_idx" ON "users" ("created_at");
 CREATE UNIQUE INDEX IF NOT EXISTS "users_email_idx" ON "users" ("email");
 CREATE INDEX IF NOT EXISTS "media_created_at_idx" ON "media" ("created_at");
@@ -202,16 +236,19 @@ CREATE INDEX IF NOT EXISTS "pages_blocks_service_services_parent_id_idx" ON "pag
 CREATE INDEX IF NOT EXISTS "pages_blocks_service_order_idx" ON "pages_blocks_service" ("_order");
 CREATE INDEX IF NOT EXISTS "pages_blocks_service_parent_id_idx" ON "pages_blocks_service" ("_parent_id");
 CREATE INDEX IF NOT EXISTS "pages_blocks_service_path_idx" ON "pages_blocks_service" ("_path");
-CREATE INDEX IF NOT EXISTS "pages_blocks_header_sections_order_idx" ON "pages_blocks_header_sections" ("_order");
-CREATE INDEX IF NOT EXISTS "pages_blocks_header_sections_parent_id_idx" ON "pages_blocks_header_sections" ("_parent_id");
-CREATE INDEX IF NOT EXISTS "pages_blocks_header_order_idx" ON "pages_blocks_header" ("_order");
-CREATE INDEX IF NOT EXISTS "pages_blocks_header_parent_id_idx" ON "pages_blocks_header" ("_parent_id");
-CREATE INDEX IF NOT EXISTS "pages_blocks_header_path_idx" ON "pages_blocks_header" ("_path");
 CREATE INDEX IF NOT EXISTS "pages_blocks_benefit_benefits_order_idx" ON "pages_blocks_benefit_benefits" ("_order");
 CREATE INDEX IF NOT EXISTS "pages_blocks_benefit_benefits_parent_id_idx" ON "pages_blocks_benefit_benefits" ("_parent_id");
 CREATE INDEX IF NOT EXISTS "pages_blocks_benefit_order_idx" ON "pages_blocks_benefit" ("_order");
 CREATE INDEX IF NOT EXISTS "pages_blocks_benefit_parent_id_idx" ON "pages_blocks_benefit" ("_parent_id");
 CREATE INDEX IF NOT EXISTS "pages_blocks_benefit_path_idx" ON "pages_blocks_benefit" ("_path");
+CREATE INDEX IF NOT EXISTS "pages_blocks_gallery_images_order_idx" ON "pages_blocks_gallery_images" ("_order");
+CREATE INDEX IF NOT EXISTS "pages_blocks_gallery_images_parent_id_idx" ON "pages_blocks_gallery_images" ("_parent_id");
+CREATE INDEX IF NOT EXISTS "pages_blocks_gallery_order_idx" ON "pages_blocks_gallery" ("_order");
+CREATE INDEX IF NOT EXISTS "pages_blocks_gallery_parent_id_idx" ON "pages_blocks_gallery" ("_parent_id");
+CREATE INDEX IF NOT EXISTS "pages_blocks_gallery_path_idx" ON "pages_blocks_gallery" ("_path");
+CREATE INDEX IF NOT EXISTS "pages_blocks_section_order_idx" ON "pages_blocks_section" ("_order");
+CREATE INDEX IF NOT EXISTS "pages_blocks_section_parent_id_idx" ON "pages_blocks_section" ("_parent_id");
+CREATE INDEX IF NOT EXISTS "pages_blocks_section_path_idx" ON "pages_blocks_section" ("_path");
 CREATE INDEX IF NOT EXISTS "pages_created_at_idx" ON "pages" ("created_at");
 CREATE INDEX IF NOT EXISTS "socal_links_created_at_idx" ON "socal_links" ("created_at");
 CREATE INDEX IF NOT EXISTS "payload_preferences_key_idx" ON "payload_preferences" ("key");
@@ -220,6 +257,8 @@ CREATE INDEX IF NOT EXISTS "payload_preferences_rels_order_idx" ON "payload_pref
 CREATE INDEX IF NOT EXISTS "payload_preferences_rels_parent_idx" ON "payload_preferences_rels" ("parent_id");
 CREATE INDEX IF NOT EXISTS "payload_preferences_rels_path_idx" ON "payload_preferences_rels" ("path");
 CREATE INDEX IF NOT EXISTS "payload_migrations_created_at_idx" ON "payload_migrations" ("created_at");
+CREATE INDEX IF NOT EXISTS "header_sections_order_idx" ON "header_sections" ("_order");
+CREATE INDEX IF NOT EXISTS "header_sections_parent_id_idx" ON "header_sections" ("_parent_id");
 DO $$ BEGIN
  ALTER TABLE "pages_blocks_hero" ADD CONSTRAINT "pages_blocks_hero_image_id_media_id_fk" FOREIGN KEY ("image_id") REFERENCES "media"("id") ON DELETE set null ON UPDATE no action;
 EXCEPTION
@@ -275,18 +314,6 @@ EXCEPTION
 END $$;
 
 DO $$ BEGIN
- ALTER TABLE "pages_blocks_header_sections" ADD CONSTRAINT "pages_blocks_header_sections_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "pages_blocks_header"("id") ON DELETE cascade ON UPDATE no action;
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
-
-DO $$ BEGIN
- ALTER TABLE "pages_blocks_header" ADD CONSTRAINT "pages_blocks_header_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "pages"("id") ON DELETE cascade ON UPDATE no action;
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
-
-DO $$ BEGIN
  ALTER TABLE "pages_blocks_benefit_benefits" ADD CONSTRAINT "pages_blocks_benefit_benefits_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "pages_blocks_benefit"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
@@ -294,6 +321,30 @@ END $$;
 
 DO $$ BEGIN
  ALTER TABLE "pages_blocks_benefit" ADD CONSTRAINT "pages_blocks_benefit_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "pages"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+
+DO $$ BEGIN
+ ALTER TABLE "pages_blocks_gallery_images" ADD CONSTRAINT "pages_blocks_gallery_images_image_id_media_id_fk" FOREIGN KEY ("image_id") REFERENCES "media"("id") ON DELETE set null ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+
+DO $$ BEGIN
+ ALTER TABLE "pages_blocks_gallery_images" ADD CONSTRAINT "pages_blocks_gallery_images_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "pages_blocks_gallery"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+
+DO $$ BEGIN
+ ALTER TABLE "pages_blocks_gallery" ADD CONSTRAINT "pages_blocks_gallery_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "pages"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+
+DO $$ BEGIN
+ ALTER TABLE "pages_blocks_section" ADD CONSTRAINT "pages_blocks_section_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "pages"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -309,6 +360,12 @@ DO $$ BEGIN
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
+
+DO $$ BEGIN
+ ALTER TABLE "header_sections" ADD CONSTRAINT "header_sections_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "header"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
 `)
 };
 
@@ -321,13 +378,16 @@ DROP TABLE "pages_blocks_about_employee";
 DROP TABLE "pages_blocks_about";
 DROP TABLE "pages_blocks_service_services";
 DROP TABLE "pages_blocks_service";
-DROP TABLE "pages_blocks_header_sections";
-DROP TABLE "pages_blocks_header";
 DROP TABLE "pages_blocks_benefit_benefits";
 DROP TABLE "pages_blocks_benefit";
+DROP TABLE "pages_blocks_gallery_images";
+DROP TABLE "pages_blocks_gallery";
+DROP TABLE "pages_blocks_section";
 DROP TABLE "pages";
 DROP TABLE "socal_links";
 DROP TABLE "payload_preferences";
 DROP TABLE "payload_preferences_rels";
-DROP TABLE "payload_migrations";`)
+DROP TABLE "payload_migrations";
+DROP TABLE "header_sections";
+DROP TABLE "header";`)
 };
